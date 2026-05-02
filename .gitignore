@@ -1,0 +1,23 @@
+# source PDFs + collected references — large binary inputs, kept locally only
+input/
+
+# python virtualenv
+.venv/
+
+# macOS / editor noise
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
+
+# python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# Claude Code personal overrides (settings.json + commands/ are intentionally tracked)
+.claude/settings.local.json
+
+# marketing drafts — local only
+marketing/

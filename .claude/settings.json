@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:finviz.com)",
+      "WebFetch(domain:stockanalysis.com)",
+      "WebFetch(domain:chartexchange.com)",
+      "WebFetch(domain:dataroma.com)",
+      "WebFetch(domain:www.dataroma.com)",
+      "WebFetch(domain:whalewisdom.com)",
+      "WebFetch(domain:hedgefollow.com)",
+      "WebFetch(domain:fintel.io)",
+      "WebFetch(domain:openinsider.com)",
+      "WebFetch(domain:gurufocus.com)",
+      "WebFetch(domain:www.gurufocus.com)",
+      "WebFetch(domain:seekingalpha.com)",
+      "WebFetch(domain:www.seekingalpha.com)",
+      "WebFetch(domain:tradingview.com)",
+      "WebFetch(domain:www.tradingview.com)",
+      "WebFetch(domain:www.timothysykes.com)",
+      "WebFetch(domain:simplywall.st)",
+      "WebFetch(domain:foreignpolicyjournal.com)",
+      "WebFetch(domain:www.fool.com)",
+      "WebFetch(domain:ir.bigbear.ai)",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__select_page",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__wait_for",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__handle_dialog",
+      "mcp__chrome-devtools__close_page",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__take_snapshot",
+      "Bash(mkdir -p *)"
+    ],
+    "deny": []
+  }
+}

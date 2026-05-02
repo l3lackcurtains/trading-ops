@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#
+# Advanced-TR pre-commit hook
+#
+# Runs project validators when markdown files are staged:
+#   - scripts/validate_links.py  → no broken md-to-md / md-to-asset links
+#   - scripts/validate_tiers.py  → Coverage tier syntax valid in scanned/
+#
+# Skip in emergencies with: git commit --no-verify
+#
+# Install: ln -s ../../scripts/hooks/pre-commit .git/hooks/pre-commit
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Only run validators when at least one markdown file is staged
+# (covers .md additions, modifications, renames, copies)
+if ! git diff --cached --name-only --diff-filter=ACMR | grep -qE '\.md$'; then
+  exit 0
+fi
+
+echo "[pre-commit] markdown changes detected — running validators..."
+
+failed=0
+
+if [[ -f scripts/validate_links.py ]]; then
+  if ! python3 scripts/validate_links.py; then
+    echo ""
+    echo "[pre-commit] FAIL: broken markdown links."
+    failed=1
+  fi
+fi
+
+if [[ -f scripts/validate_tiers.py ]]; then
+  if ! python3 scripts/validate_tiers.py; then
+    echo ""
+    echo "[pre-commit] FAIL: invalid Coverage tier syntax."
+    failed=1
+  fi
+fi
+
+if [[ "$failed" -ne 0 ]]; then
+  echo ""
+  echo "[pre-commit] commit blocked. Fix the issues above, or override with:"
+  echo "             git commit --no-verify"
+  exit 1
+fi
+
+echo "[pre-commit] all checks passed."
