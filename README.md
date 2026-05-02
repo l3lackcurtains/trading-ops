@@ -79,6 +79,23 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+Or with [uv](https://github.com/astral-sh/uv) (faster installs, no activation needed):
+
+```bash
+git clone https://github.com/YOUR_USERNAME/trading-ops.git
+cd trading-ops
+
+uv venv
+uv pip install -r requirements.txt
+```
+
+Scripts can then be run directly without activating the venv:
+
+```bash
+uv run python scripts/fetch_quote.py AAPL
+uv run python scripts/fetch_ohlc.py BTCUSDT
+```
+
 Or with npm (installs venv, dependencies, and the pre-commit hook in one step):
 
 ```bash
