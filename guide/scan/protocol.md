@@ -28,8 +28,6 @@ For any `/scan*` or `/rescan` command on `<TICKER>`:
 
 4. **Read `scanned/MACRO/current.md`** for current regime context (always — even when scanning a stock, the regime sets the lens). If older than 7 days when running a stock scan, **warn the user** and offer to run `/scan-macro` first.
 
-5. **Read `scanned/LESSONS.md`** — required. The lessons file is the desk's institutional memory. Active lessons may apply directly to today's setup (cite + apply). The seed conventions at the top apply to every scan from day 1.
-
 **Why:** Each scan is a delta on prior knowledge, not a clean-room analysis. The audit trail is only valuable if we actually use it. Re-deriving from zero each time wastes work and breaks the evolution narrative. The Δ marker in the new TL;DR depends on knowing the old state.
 
 If the prior scan flagged a specific trigger ("watch for break of $5.77 on volume"), the new scan must address that trigger explicitly — did it happen? what did price do? Log to INDEX.md § Performance / audit log if it fired or failed (per [tiers](tiers.md)).
@@ -51,7 +49,7 @@ Examples:
 
 **Outcomes are appended PER HORIZON, PER PATTERN.** A single rescan can produce 0–3 outcome rows. If no prior trigger resolved, write nothing to the audit log — the silence is the signal.
 
-**The audit log is the system's memory.** `compute_hit_rates.py` reads it; `/review-track-record` writes lessons from it. If you skip the outcome log on a rescan, you've broken the learning loop for that ticker.
+**The audit log is the system's memory.** `compute_hit_rates.py` reads it. If you skip the outcome log on a rescan, you've broken the tracking loop for that ticker.
 
 ---
 

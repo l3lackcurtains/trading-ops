@@ -22,8 +22,6 @@ Plus the **flow doc that matches the asset class** (route via Step 0 below):
 - [`guide/scan/fx-flow.md`](../../guide/scan/fx-flow.md) — FX flow & positioning (COT-centric)
 - [`guide/scan/commodity-flow.md`](../../guide/scan/commodity-flow.md) — COMMODITY flow & positioning
 
-Plus `scanned/LESSONS.md` — required reading before writing the new Action verdict.
-
 If a step here ever conflicts with the guide, the guide wins. Open the fix there.
 
 ---
@@ -75,7 +73,6 @@ Per [`protocol.md`](../../guide/scan/protocol.md) § Read-before-scan:
 
 1. Read prior `current.md` (if exists) and 2–3 most recent archive snapshots. Capture prior **Coverage tier** + **Action verdict** + **trigger specs** for tier-change comparison and outcome resolution.
 2. Read `scanned/MACRO/current.md` for current regime context. If older than 7 days, warn user and offer `/rescan macro` first.
-3. **Read `scanned/LESSONS.md`** — required. Apply seed conventions and any active lessons that match this setup.
 
 ---
 
@@ -213,8 +210,6 @@ Three components in order:
 **(b) ASCII price ladder** — fenced ` ```text` block, prices descending top→bottom, current price marked with `>>` and `***`, upside/downside paths separated by `- - -`. ASCII-only glyphs.
 
 **(c) Trade table** — explicit Entry / Stop / T1 / T2 / T3 / R:R (computed) / Sizing / Time-stop columns, one row per actionable plan.
-
-Plus a **Lessons applied** paragraph citing which `LESSONS.md` entries shaped the call.
 
 ---
 

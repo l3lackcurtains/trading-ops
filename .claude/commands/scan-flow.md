@@ -16,8 +16,6 @@ The protocol lives in `guide/scan/`. **Read these before starting:**
   - **FX** → [`guide/scan/fx-flow.md`](../../guide/scan/fx-flow.md)
   - **Commodity** → [`guide/scan/commodity-flow.md`](../../guide/scan/commodity-flow.md)
 
-Plus `scanned/LESSONS.md` (required).
-
 ## Steps
 
 ### 1. Pre-flight
@@ -26,7 +24,7 @@ Plus `scanned/LESSONS.md` (required).
 2. Locate `<target-folder>` (`scanned/<asset-class>/<SYMBOL>/`).
 3. **Verify `current.md` exists.** If not, tell the user to run `/scan <SYMBOL>` first, and stop.
 4. Read existing `current.md` — capture header, Action verdict, TL;DR, **the existing flow section** (so we know what to replace), and everything else.
-5. Read `scanned/MACRO/current.md` and `scanned/LESSONS.md`.
+5. Read `scanned/MACRO/current.md`.
 
 ### 2. Pull flow data (asset-class-specific)
 
