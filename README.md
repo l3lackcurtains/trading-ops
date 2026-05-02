@@ -27,6 +27,14 @@ Every integration is additive. The research framework stays the anchor; MCPs han
 
 ---
 
+## Demo
+
+<p align="center">
+  <img src="assets/demo.gif" alt="trading-ops — live scan running in Claude Code" />
+</p>
+
+---
+
 ## What you get
 
 **Structured verdicts — no prose triggers.** Every scan ends with a verb (`LONG` / `SHORT` / `WAIT` / `SKIP` / ...), an ASCII price ladder with every level marked, and a trade table with Entry / Stop / T1 / T2 / T3 / R:R / Sizing / Time-stop:
@@ -52,7 +60,7 @@ Every integration is additive. The research framework stays the anchor; MCPs han
 
 **Three horizons per name.** Positional (weeks–months), Swing (3–15 days), Day (intraday). Different verdict per horizon — positional auto-reject is compatible with a tradeable swing.
 
-**Audit trail built in.** Every scan is dated and archived. Rescans delta-compare against prior snapshots (`Δ since last scan`), classify prior triggers as `fired-correct / fired-stopped / invalidated / stale`, and accumulate in a rolling `LESSONS.md` loaded before every scan.
+**Audit trail built in.** Every scan is dated and archived. Rescans delta-compare against prior snapshots (`Δ since last scan`) and classify prior triggers as `fired-correct / fired-stopped / invalidated / stale`.
 
 **Mostly no API keys required.** Nine Python scripts pre-compute data locally (Yahoo Finance, SEC EDGAR, CoinGecko, alternative.me, Binance, mempool.space, Google News RSS). Optional free keys for FRED macroeconomics and Finnhub analyst data upgrade the output further.
 
@@ -203,7 +211,6 @@ trading-ops/
 ├── scripts/                 ← Python data-fetch utilities
 ├── scanned/                 ← living analyses — your trading desk
 │   ├── INDEX.md             ← auto-generated coverage navigator
-│   ├── LESSONS.md           ← rolling lessons, loaded before every scan
 │   ├── MACRO/               ← regime tracker
 │   ├── stocks/<TICKER>/     ← per-stock coverage (current.md + archive/ + charts/)
 │   ├── crypto/<SYMBOL>/
@@ -455,7 +462,7 @@ npm run hook
 ## Rules in four bullets
 
 1. **`docs/` is read-only.** `/ingest` is the only writer. Never modify during a scan.
-2. **Read before you scan.** Every command loads `current.md`, recent archives, `MACRO/current.md`, and `LESSONS.md` first.
+2. **Read before you scan.** Every command loads `current.md`, recent archives, and `MACRO/current.md` first.
 3. **Cite numbers, not vibes.** Every claim that drives a verdict gets a markdown link. ROIC -38.6% beats "ROIC is poor."
 4. **Action verdicts are structured, not prose.** Verbs from a fixed list, ASCII ladder for levels, trade table for triggers / stops / targets / R:R / sizing.
 
