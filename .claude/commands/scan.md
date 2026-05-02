@@ -82,7 +82,7 @@ Per [`protocol.md`](../../guide/scan/protocol.md) § Read-before-scan:
 ## Step 3 — Rotate + create folder
 
 - If prior `current.md` exists: rotate to `archive/<prior-scan-date>.md` and prune per `protocol.md` § Retention policy (or `scripts/prune_archive.py`).
-- If folder doesn't exist: create `<target-folder>/{archive,charts}/`.
+- If folder doesn't exist: create `<target-folder>/archive/`.
 
 ---
 
