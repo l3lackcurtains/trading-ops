@@ -212,7 +212,7 @@ trading-ops/
 ├── scanned/                 ← living analyses — your trading desk
 │   ├── INDEX.md             ← auto-generated coverage navigator
 │   ├── MACRO/               ← regime tracker
-│   ├── stocks/<TICKER>/     ← per-stock coverage (current.md + archive/ + charts/)
+│   ├── stocks/<TICKER>/     ← per-stock coverage (current.md + archive/)
 │   ├── crypto/<SYMBOL>/
 │   ├── indices/<SYMBOL>/
 │   ├── fx/<PAIR>/
