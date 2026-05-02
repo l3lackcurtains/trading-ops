@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>trading-ops — logo export</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 24px;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  /* ── logo container — this is what gets exported ──── */
+  #logo {
+    width: 512px;
+    height: 512px;
+    background: #0a0f0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    image-rendering: pixelated;
+  }
+
+  /* pixel corner decorations */
+  #logo::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 2px solid #1a3a1a;
+    pointer-events: none;
+  }
+
+  /* ── pixel bar chart icon ───────────────────────── */
+  .chart-icon {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  .bar {
+    width: 18px;
+    image-rendering: pixelated;
+  }
+
+  .bar-1 { height: 24px; background: #1a6b2a; }
+  .bar-2 { height: 40px; background: #1d8032; }
+  .bar-3 { height: 58px; background: #22a03e; }
+  .bar-4 { height: 80px; background: #28c84e; }
+  .bar-5 {
+    height: 106px;
+    background: #00ff66;
+    box-shadow: 0 0 0 2px #00ff6620, 0 0 20px #00ff6640, 0 0 40px #00ff6620;
+  }
+
+  /* wick on top of tallest bar */
+  .bar-5-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .wick-top {
+    width: 4px;
+    height: 14px;
+    background: #00ff66;
+    box-shadow: 0 0 8px #00ff6660;
+  }
+
+  /* ── text ────────────────────────────────────────── */
+  .name-trading {
+    font-size: 36px;
+    color: #00ff66;
+    text-shadow:
+      0 0 10px #00ff6650,
+      0 0 24px #00ff6630,
+      4px 4px 0 #002211;
+    letter-spacing: .02em;
+    line-height: 1;
+  }
+
+  .name-ops {
+    font-size: 36px;
+    color: #00cc55;
+    text-shadow:
+      0 0 8px #00ff6630,
+      4px 4px 0 #002211;
+    letter-spacing: .02em;
+    line-height: 1;
+    margin-top: 8px;
+  }
+
+  .sub {
+    font-size: 7px;
+    color: #1e5c2a;
+    letter-spacing: .16em;
+    margin-top: 22px;
+    text-shadow: 0 0 6px #00ff4410;
+  }
+
+  /* corner pixel squares */
+  .corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #00ff66;
+    box-shadow: 0 0 6px #00ff6660;
+  }
+  .corner-tl { top: 12px;  left: 12px; }
+  .corner-tr { top: 12px;  right: 12px; }
+  .corner-bl { bottom: 12px; left: 12px; }
+  .corner-br { bottom: 12px; right: 12px; }
+
+  /* ── export button ─────────────────────────────── */
+  button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #00ff66;
+    background: #0a0f0a;
+    border: 2px solid #00ff66;
+    padding: 12px 22px;
+    cursor: pointer;
+    letter-spacing: .1em;
+    box-shadow: 0 0 12px #00ff6630;
+    transition: box-shadow .15s;
+  }
+  button:hover {
+    box-shadow: 0 0 20px #00ff6660, inset 0 0 10px #00ff6610;
+  }
+
+  .hint {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #2a4a2a;
+    letter-spacing: .08em;
+  }
+</style>
+</head>
+<body>
+
+<!-- THE LOGO — only this div gets exported -->
+<div id="logo">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- bar chart icon -->
+  <div class="chart-icon">
+    <div class="bar bar-1"></div>
+    <div class="bar bar-2"></div>
+    <div class="bar bar-3"></div>
+    <div class="bar bar-4"></div>
+    <div class="bar-5-wrap">
+      <div class="wick-top"></div>
+      <div class="bar bar-5"></div>
+    </div>
+  </div>
+
+  <!-- wordmark -->
+  <div class="name-trading">TRADING</div>
+  <div class="name-ops">-OPS</div>
+  <div class="sub">SYSTEMATIC · FRAMEWORK-DRIVEN</div>
+</div>
+
+<!-- export controls — not included in the PNG -->
+<button onclick="exportPNG()">▶ EXPORT PNG</button>
+<div class="hint">512 × 512 px</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+  function exportPNG() {
+    const logo = document.getElementById('logo');
+    html2canvas(logo, {
+      width: 512,
+      height: 512,
+      scale: 2,          // 2× = 1024px for crisp retina
+      backgroundColor: '#0a0f0a',
+      useCORS: true,
+      logging: false,
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'trading-ops-logo.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+</script>
+
+</body>
+</html>

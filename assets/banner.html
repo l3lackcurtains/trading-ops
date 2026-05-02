@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>trading-ops — banner export</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 28px;
+  }
+
+  /* ── banner canvas ──────────────────────────────────── */
+  #banner {
+    width: 1280px;
+    height: 640px;
+    background: #0a0f0a;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    image-rendering: pixelated;
+  }
+
+  /* scanlines */
+  #banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,.13) 3px,
+      rgba(0,0,0,.13) 4px
+    );
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  /* vignette */
+  #banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 40% 50%, transparent 40%, rgba(0,0,0,.55) 100%);
+    pointer-events: none;
+    z-index: 21;
+  }
+
+  /* pixel border frame */
+  .frame {
+    position: absolute;
+    inset: 16px;
+    border: 2px solid #1a3a1a;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* corner squares */
+  .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #00ff66;
+    box-shadow: 0 0 8px #00ff6680;
+    z-index: 6;
+  }
+  .c-tl { top: 16px;    left: 16px; }
+  .c-tr { top: 16px;    right: 16px; }
+  .c-bl { bottom: 16px; left: 16px; }
+  .c-br { bottom: 16px; right: 16px; }
+
+  /* ── left panel ─────────────────────────────────────── */
+  .left {
+    width: 520px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 56px 60px 64px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* mini bar chart icon */
+  .icon-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    margin-bottom: 32px;
+  }
+
+  .b {
+    width: 14px;
+    image-rendering: pixelated;
+  }
+  .b1 { height: 18px; background: #1a6b2a; }
+  .b2 { height: 30px; background: #1d8032; }
+  .b3 { height: 44px; background: #22a03e; }
+  .b4 { height: 60px; background: #28c84e; }
+  .b5-wrap { display: flex; flex-direction: column; align-items: center; }
+  .b5-wick { width: 3px; height: 10px; background: #00ff66; box-shadow: 0 0 6px #00ff6660; }
+  .b5 { height: 80px; width: 14px; background: #00ff66; box-shadow: 0 0 16px #00ff6660, 0 0 32px #00ff6620; }
+
+  /* wordmark */
+  .wordmark {
+    font-family: 'Press Start 2P', monospace;
+    line-height: 1;
+  }
+
+  .w-trading {
+    font-size: 52px;
+    color: #00ff66;
+    text-shadow: 0 0 16px #00ff6650, 0 0 40px #00ff6620, 5px 5px 0 #002211;
+    display: block;
+  }
+
+  .w-ops {
+    font-size: 52px;
+    color: #00cc55;
+    text-shadow: 0 0 10px #00ff6630, 5px 5px 0 #002211;
+    display: block;
+    margin-top: 6px;
+  }
+
+  .tagline {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #2a6a3a;
+    letter-spacing: .14em;
+    margin-top: 28px;
+    line-height: 2;
+    text-shadow: 0 0 6px #00ff4410;
+  }
+
+  .badges {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 32px;
+  }
+
+  .badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #1e5c2a;
+    letter-spacing: .1em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .badge .arrow { color: #00ff66; text-shadow: 0 0 6px #00ff6680; }
+
+  /* vertical separator */
+  .sep {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #1a3a1a 20%, #1a3a1a 80%, transparent);
+    flex-shrink: 0;
+    margin: 40px 0;
+    z-index: 10;
+  }
+
+  /* ── right panel — terminal ─────────────────────────── */
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 52px 60px 52px 52px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .t-dots { display: flex; gap: 6px; }
+  .t-dot { width: 8px; height: 8px; }
+  .t-dot-r { background: #cc3333; box-shadow: 0 0 5px #cc3333; }
+  .t-dot-y { background: #cc9900; box-shadow: 0 0 5px #cc9900; }
+  .t-dot-g { background: #00cc55; box-shadow: 0 0 5px #00cc55; }
+
+  .t-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #2a5c2a;
+    letter-spacing: .06em;
+  }
+
+  /* terminal output lines */
+  .term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.9;
+    white-space: pre;
+  }
+
+  .c-prompt  { color: #00ff66; text-shadow: 0 0 6px #00ff6640; }
+  .c-dim     { color: #1e4a1e; }
+  .c-head    { color: #3a8a4a; }
+  .c-price   { color: #5a7a5a; }
+  .c-t2      { color: #cc4444; }
+  .c-t1      { color: #cc9900; }
+  .c-entry   { color: #00ff66; text-shadow: 0 0 6px #00ff6640; }
+  .c-trigger { color: #4488ff; }
+  .c-current { color: #e6edf3; font-weight: 600; }
+  .c-short   { color: #cc4444; }
+  .c-sep     { color: #1a3a1a; }
+  .c-verdict { color: #00ff66; text-shadow: 0 0 8px #00ff6660; }
+  .c-meta    { color: #2a6a3a; }
+  .c-muted   { color: #1e4a1e; }
+
+  /* ── export button ─────────────────────────────────── */
+  button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #00ff66;
+    background: #0a0f0a;
+    border: 2px solid #00ff66;
+    padding: 13px 24px;
+    cursor: pointer;
+    letter-spacing: .1em;
+    box-shadow: 0 0 12px #00ff6630;
+    transition: box-shadow .15s;
+  }
+  button:hover { box-shadow: 0 0 24px #00ff6660, inset 0 0 10px #00ff6610; }
+
+  .hint {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #2a4a2a;
+    letter-spacing: .08em;
+  }
+</style>
+</head>
+<body>
+
+<div id="banner">
+  <div class="frame"></div>
+  <div class="corner c-tl"></div>
+  <div class="corner c-tr"></div>
+  <div class="corner c-bl"></div>
+  <div class="corner c-br"></div>
+
+  <!-- LEFT: brand -->
+  <div class="left">
+    <div class="icon-chart">
+      <div class="b b1"></div>
+      <div class="b b2"></div>
+      <div class="b b3"></div>
+      <div class="b b4"></div>
+      <div class="b5-wrap">
+        <div class="b5-wick"></div>
+        <div class="b5"></div>
+      </div>
+    </div>
+
+    <div class="wordmark">
+      <span class="w-trading">TRADING</span>
+      <span class="w-ops">-OPS</span>
+    </div>
+
+    <div class="tagline">
+      SYSTEMATIC · FRAMEWORK-DRIVEN<br>
+      TRADING WORKSPACE
+    </div>
+
+    <div class="badges">
+      <div class="badge"><span class="arrow">▶</span> 5 ASSET CLASSES · 1 COMMAND</div>
+      <div class="badge"><span class="arrow">▶</span> STRUCTURED VERDICT · AUDIT TRAIL</div>
+      <div class="badge"><span class="arrow">▶</span> MIT · NO PAID APIS · MCP-NATIVE</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- RIGHT: terminal output -->
+  <div class="right">
+    <div class="terminal-bar">
+      <div class="t-dots">
+        <div class="t-dot t-dot-r"></div>
+        <div class="t-dot t-dot-y"></div>
+        <div class="t-dot t-dot-g"></div>
+      </div>
+      <div class="t-title">~/trading-ops — /scan BTCUSDT</div>
+    </div>
+
+    <div class="term"><span class="c-prompt">$</span> <span class="c-head">/scan BTCUSDT</span>
+
+<span class="c-head">        BTCUSDT · 2026-05-02 · spot $96,420</span>
+<span class="c-dim">        ══════════════════════════════════════</span>
+
+<span class="c-dim">        UPSIDE</span>
+<span class="c-price">  $104k</span>  <span class="c-dim">═══</span>  <span class="c-t2">[T2]  heatmap cluster</span>
+<span class="c-price">   $99k</span>  <span class="c-dim">═══</span>  <span class="c-t1">[T1]  weekly VWAP + max pain</span>
+<span class="c-price">   $97k</span>       <span class="c-entry">-->   LONG entry  (Swing-B)</span>
+<span class="c-price">   $96k</span>  <span class="c-dim">═══</span>  <span class="c-trigger"> ^^   trigger: daily close ≥</span>
+<span class="c-sep">        - - - - - - - - - - - - - - - - -</span>
+<span class="c-price">&gt;&gt; $96,420</span>  <span class="c-current">★  CURRENT</span>
+<span class="c-sep">        - - - - - - - - - - - - - - - - -</span>
+<span class="c-price">   $91k</span>       <span class="c-short">-->   SHORT  (Swing-A)</span>
+
+<span class="c-verdict">  VERDICT  LONG · Swing-B</span>  <span class="c-meta">R:R 3.4 · stop $91,200 · size 0.5×</span></div>
+  </div>
+</div>
+
+<button onclick="exportPNG()">▶ EXPORT BANNER PNG</button>
+<div class="hint">1280 × 640 px · 2× retina</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+  function exportPNG() {
+    html2canvas(document.getElementById('banner'), {
+      width: 1280,
+      height: 640,
+      scale: 2,
+      backgroundColor: '#0a0f0a',
+      useCORS: true,
+      logging: false,
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'trading-ops-banner.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+</script>
+
+</body>
+</html>

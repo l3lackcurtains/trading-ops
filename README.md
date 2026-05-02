@@ -1,4 +1,6 @@
-# trading-ops
+<p align="center">
+  <img src="assets/trading-ops-logo.png" alt="trading-ops" width="200" />
+</p>
 
 A systematic trading workspace that runs inside [Claude Code](https://claude.ai/code). One command scans any asset — stock, crypto, index, FX, commodity — and produces a dated, framework-aligned analysis with structured verdicts, ASCII price ladders, and trade tables. Everything saves as local Markdown: auditable, greppable, version-controlled, and yours.
 
