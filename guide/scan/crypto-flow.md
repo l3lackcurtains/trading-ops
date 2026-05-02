@@ -34,6 +34,10 @@ Returns ~400–600 tokens of structured markdown:
 
 Symbol resolution: hardcoded shortcuts for the top 30 names, fall through to CoinGecko `/coins/list` cached locally for 7 days.
 
+**Known failure modes:**
+- **CoinGecko gzip error** — if `fetch_crypto.py` exits with `'utf-8' codec can't decode byte 0x8b`, the CoinGecko endpoint returned gzip-compressed data that the script isn't decompressing. Fall back to Tier A WebFetch for the affected fields. The fix in the script is to add `Accept-Encoding: identity` to the request headers or decode via `gzip.decompress`.
+- **`fetch_ohlc.py` symbol format** — Yahoo Finance uses `BTC-USD`, `ETH-USD`, `SOL-USD` (hyphen + USD suffix), not the exchange pair format. Always pass the Yahoo-format symbol: `.venv/bin/python scripts/fetch_ohlc.py BTC-USD --timeframes W,D,4H,1H`. The scan command's display symbol (BTCUSDT) and the OHLC script symbol (BTC-USD) are different.
+
 **Tier A WebFetch sources below stay as documented fallback** — pull them when Tier 0 fails or when you need granular per-exchange detail (e.g. specific OKX vs Bybit funding curve cross-confirmation).
 
 ### Tier A — WebFetch (fallback / per-exchange granularity)

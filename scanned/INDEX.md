@@ -2,8 +2,8 @@
 
 **Last regenerated:** 2026-05-02
 **Macro regime:** [MACRO](MACRO/current.md) — Reflation
-**Coverage universe:** 4 names (1 macro + 0 FX/index + 3 stocks)
-**Per-horizon active counts:** Pos **T**/**W** = 0 · Swing **T**/**W** = 3 · Day **T**/**W** = 2
+**Coverage universe:** 5 names (1 macro + 1 crypto + 3 stocks)
+**Per-horizon active counts:** Pos **T**/**W** = 1 · Swing **T**/**W** = 4 · Day **T**/**W** = 2
 
 This is the trader-desk equivalent of an institutional research coverage list — every name we scan, with **a tier per horizon** (Positional / Swing / Day-trade) so the framework matches reality: a name can be auto-reject long-term but a clean swing or scalp.
 
@@ -31,7 +31,9 @@ Full mapping rules in [`guide/scan/tiers.md`](../guide/scan/tiers.md).
 
 ## Positional Top Picks + Watchlist
 
-*None currently — wait IS a position.*
+| Ticker | Tier | Trigger | Invalidation |
+|---|:-:|---|---|
+| [BTCUSDT](crypto/BTCUSDT/current.md) | **W** | D close >$82,800 (200d EMA) sustained ≥2 days | D close <$75,320 (weekly LVN) |
 
 ---
 
@@ -42,6 +44,7 @@ Full mapping rules in [`guide/scan/tiers.md`](../guide/scan/tiers.md).
 | [CRCL](stocks/CRCL/current.md) | **W** | 1/6 | (see scan) | (see scan) |
 | [HOOD](stocks/HOOD/current.md) | **W** | 2/6 | D close >$75.16 (weekly VWAP) on vol → long to $80/$85; or $75/$82.50 call spread May 15 | D close <$71.92 (AVWAP −1σ) |
 | [NIO](stocks/NIO/current.md) | **W** | 0/6 | (see scan) | (see scan) |
+| [BTCUSDT](crypto/BTCUSDT/current.md) | **W** | — | LONG: D close >$80,740 (LVN) + vol ≥1.0× → T1 $82.6K / T2 $86K; SHORT: D close <$77,970 (mVWAP) → T1 $76K / T2 $75.3K | Long stop $79,400 · Short stop $79,400 |
 
 ---
 
@@ -60,11 +63,12 @@ Full mapping rules in [`guide/scan/tiers.md`](../guide/scan/tiers.md).
 
 ---
 
-## Macro / Indices / FX
+## Macro / Indices / FX / Crypto
 
-| Ticker | Last Scan | Regime / Bias | Notes |
-|---|---|---|---|
-| [MACRO](MACRO/current.md) | 2026-05-01 | Reflation | (see scan) |
+| Ticker | Pos | Swing | Day | Last Scan | Regime / Bias | Notes |
+|---|:-:|:-:|:-:|---|---|---|
+| [MACRO](MACRO/current.md) | — | — | — | 2026-05-01 | R2 Reflation | (see scan) |
+| [BTCUSDT](crypto/BTCUSDT/current.md) | **W** | **W** | **B** | 2026-05-02 | R2 neutral-to-mild-bull; soft DXY tailwind, below 200d EMA | Swing WAIT: long >$80,740 LVN on vol / short <$77,970 mVWAP |
 
 ---
 
@@ -74,7 +78,11 @@ Sorted by date. 🔥 = within 7 days.
 
 | Date | Ticker | Pos | Swing | Day | Event |
 |---|---|:-:|:-:|:-:|---|
+| 🔥 2026-05-08 | BTCUSDT | **W** | **W** | **B** | NFP April — macro volatility event; swing trigger watch |
 | 2026-05-11 | CRCL | **S** | **W** | **W** | 🔥 **Q1 earnings Mon |
+| 2026-05-12 | BTCUSDT | **W** | **W** | **B** | CPI April — core CPI trajectory; rate / BTC cross-asset |
+| 2026-05-15 | BTCUSDT | **W** | **W** | **B** | Monthly OPEX — BTC options max pain pull (~$78K–$80K) |
+| ≈2026-05-16 | BTCUSDT | **W** | **W** | **B** | BTC difficulty retarget (est. -1.33%) |
 | 2026-07-29 | HOOD | **S** | **W** | **W** | Q2 2026 earnings ≈AMC |
 
 ---
@@ -83,6 +91,7 @@ Sorted by date. 🔥 = within 7 days.
 
 | Date | Ticker | Horizon | Action | Tier change | Reason |
 |---|---|---|---|---|---|
+| 2026-05-02 | BTCUSDT | All | Initiated | — → Pos **W** / Swing **W** / Day **B** | First scan: below 200d EMA ($82.8K); two-sided swing around monthly VWAP; neutral funding |
 | 2026-05-02 | HOOD | All | Initiated | — → Pos **S** / Swing **W** / Day **W** | First scan: sub-200d daily EMA; post-earnings washout at $74 triple confluence; gamma pull to $80 |
 | 2026-05-01 | NIO | All | Initiated | — → Pos **S** / Swing **W** / Day **B** | First scan: First scan |
 | 2026-05-01 | CRCL | All | Initiated | — → Pos **S** / Swing **W** / Day **B** | First scan: auto-reject ROIC -2.29%; May 11 binary; VWAP-band fade |
