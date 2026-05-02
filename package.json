@@ -1,0 +1,14 @@
+{
+  "name": "trading-ops",
+  "version": "1.0.0",
+  "description": "Framework-driven trading workspace for Claude Code",
+  "private": true,
+  "scripts": {
+    "setup": "python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && npm run hook",
+    "hook": "ln -sf ../../scripts/hooks/pre-commit .git/hooks/pre-commit",
+    "validate": ".venv/bin/python scripts/validate_links.py && .venv/bin/python scripts/validate_tiers.py",
+    "index": ".venv/bin/python scripts/regen_index.py",
+    "prune": ".venv/bin/python scripts/prune_archive.py",
+    "prune:apply": ".venv/bin/python scripts/prune_archive.py --apply"
+  }
+}

@@ -2,6 +2,8 @@
 
 A systematic trading workspace that runs inside [Claude Code](https://claude.ai/code). One command scans any asset — stock, crypto, index, FX, commodity — and produces a dated, framework-aligned analysis with structured verdicts, ASCII price ladders, and trade tables. Everything saves as local Markdown: auditable, greppable, version-controlled, and yours.
 
+It is intentionally lean. The framework handles research and structured verdicts — execution, alerts, and integrations are left to you. That boundary is deliberate: your trading decisions should stay yours. But Claude Code is MCP-native, which means you can wire in almost anything — a broker, a browser, a chart viewer — and the whole stack snaps together.
+
 ```
 /scan AAPL        → 6-pillar fundamentals + Volume Profile + VWAP + trade plan
 /scan BTCUSDT     → F&G + ETF flows + perp funding/OI + liquidation heatmap
@@ -63,6 +65,12 @@ cd trading-ops
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+Or with npm (installs venv, dependencies, and the pre-commit hook in one step):
+
+```bash
+npm run setup
 ```
 
 Then open the folder in Claude Code:
@@ -245,12 +253,125 @@ Add new knowledge via `/ingest`. The command shows a write plan and waits for co
 
 ---
 
+## Extending with MCPs
+
+Claude Code is MCP-native. Any MCP server you add to `~/.claude/claude.json` (global) or `.claude/settings.json` (project) is immediately available inside every slash command and freeform session. The possibilities are essentially unbounded — here are the ones that slot most naturally into this workspace.
+
+### Broker integration
+
+Wire up order execution so Claude can place, size, and cancel orders directly from a scan verdict.
+
+**Alpaca** (stocks, commission-free):
+```json
+// ~/.claude/claude.json → mcpServers
+"alpaca": {
+  "command": "npx",
+  "args": ["-y", "@alpacahq/alpaca-mcp"],
+  "env": {
+    "ALPACA_API_KEY": "your-key",
+    "ALPACA_API_SECRET": "your-secret",
+    "ALPACA_BASE_URL": "https://paper-api.alpaca.markets"
+  }
+}
+```
+
+After adding it, `/scan AAPL` ends with a trade table — then you ask Claude: *"Place the Swing-B entry as a limit order, 50% size."* Claude calls the broker MCP, confirms fill, logs it.
+
+Other brokers with community MCPs: Interactive Brokers, Tradovate, Binance (crypto). Search `mcp <broker name>` on GitHub or the MCP registry.
+
+### TradingView charts via Chrome DevTools MCP
+
+The Chrome DevTools MCP is listed in Prerequisites because chart screenshots plug directly into scan output — Claude opens TradingView, navigates to the symbol, screenshots the chart, and embeds it in `scanned/stocks/<TICKER>/charts/`.
+
+```json
+"chrome-devtools": {
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-chrome-devtools"],
+  "env": { "CHROME_PATH": "/usr/bin/google-chrome" }
+}
+```
+
+Then from a scan: *"Pull a daily chart for NVDA with 20/50/200 EMAs and save it."* Claude navigates TradingView, applies the layout, screenshots, saves. No manual steps.
+
+You can extend this further — monitor an open TradingView alert panel and have Claude notify you when a level fires, or read DOM-level order book data from exchange web UIs.
+
+### Browser automation MCP
+
+A Playwright or Puppeteer MCP opens the rest of the web to the scan pipeline — pages that don't have APIs, paywalled data sources, broker web portals.
+
+```json
+"playwright": {
+  "command": "npx",
+  "args": ["-y", "@executeautomation/playwright-mcp-server"]
+}
+```
+
+Example use: scrape a brokerage account's positions page, reconcile against open scan verdicts, flag anything that drifted outside its stop.
+
+### Notification MCP (Slack / Discord / Telegram)
+
+Get alerted when a rescan flips a verdict from W → T or fires a trigger.
+
+```json
+"slack": {
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-slack"],
+  "env": { "SLACK_BOT_TOKEN": "xoxb-..." }
+}
+```
+
+After a `/rescan AAPL`, if the verdict changed: *"Post the delta summary to #trading-alerts."*
+
+### The pattern
+
+Every MCP extends what Claude can *do* inside this workspace — but the research framework, verdicts, and levels stay anchored to `docs/` and `guide/`. MCPs handle the last mile (execute, alert, visualize) while the framework handles the thinking. Add as many or as few as you need.
+
+---
+
+## npm shortcuts
+
+A `package.json` is included for common maintenance tasks. No Node dependencies — just script aliases.
+
+| Command | What it does |
+|---|---|
+| `npm run setup` | Create venv, install Python deps, install pre-commit hook |
+| `npm run hook` | Install pre-commit hook only |
+| `npm run validate` | Run link audit + tier syntax linter |
+| `npm run index` | Regenerate `scanned/INDEX.md` |
+| `npm run prune` | Dry-run archive retention policy |
+| `npm run prune:apply` | Apply retention policy (deletes old snapshots) |
+
+---
+
+## Automating with Claude routines
+
+Claude Code has a `/schedule` command that runs any slash command as a recurring background agent — no cron setup, no server. Useful for keeping the workspace fresh without manual effort.
+
+```
+/schedule "run /scan-macro every Monday at 8am ET"
+/schedule "run /rescan BTCUSDT every day at 6am ET"
+/schedule "run /discover every Sunday at 7pm ET"
+```
+
+Each routine runs independently, saves output to the normal `scanned/` paths, and respects the same framework rules as a manual scan. You can list, pause, or delete routines with `/schedule list` and `/schedule delete`.
+
+**Practical setups:**
+
+- **Weekly regime refresh** — schedule `/scan-macro` Monday premarket. Every downstream scan that week reads a fresh regime.
+- **Watchlist maintenance** — schedule `/rescan` on your open positions daily. The delta markers (`Δ`) flag anything that moved.
+- **Screen rotation** — schedule `/discover` weekly on Sunday. Monday morning you have a fresh candidate list anchored to the new regime.
+- **Earnings pipeline** — schedule `/scan-earnings TICKER` a month out from print date. The checklist is waiting when you need it.
+
+Routines don't replace judgment — they make sure the data is there when you sit down to make a decision.
+
+---
+
 ## Pre-commit validation
 
-A git hook runs `validate_links.py` and `validate_tiers.py` on every staged markdown commit. Install once per clone:
+A git hook runs `validate_links.py` and `validate_tiers.py` on every staged markdown commit. Install with:
 
 ```bash
-ln -s ../../scripts/hooks/pre-commit .git/hooks/pre-commit
+npm run hook
 ```
 
 ---
