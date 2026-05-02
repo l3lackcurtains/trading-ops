@@ -2,7 +2,19 @@
 
 A systematic trading workspace that runs inside [Claude Code](https://claude.ai/code). One command scans any asset — stock, crypto, index, FX, commodity — and produces a dated, framework-aligned analysis with structured verdicts, ASCII price ladders, and trade tables. Everything saves as local Markdown: auditable, greppable, version-controlled, and yours.
 
-It is intentionally lean. The framework handles research and structured verdicts — execution, alerts, and integrations are left to you. That boundary is deliberate: your trading decisions should stay yours. But Claude Code is MCP-native, which means you can wire in almost anything — a broker, a browser, a chart viewer — and the whole stack snaps together.
+It is intentionally lean. The framework handles research and structured verdicts — execution, alerts, and integrations are left to you. That boundary is deliberate: your trading decisions should stay yours.
+
+The base layer works out of the box. But Claude Code is MCP-native, so the stack is open:
+
+```
++ broker MCP       → place orders directly from a verdict (Alpaca, CCXT / Weex / Binance)
++ Chrome MCP       → auto-pull TradingView charts into every scan
++ Hermes           → run scans 24/7 on a $5 VPS, push alerts to Telegram or Discord
++ Playwright MCP   → scrape any page without an API — positions, portals, flow data
++ Slack MCP        → post verdict deltas to a channel the moment a rescan flips
+```
+
+Every integration is additive. The research framework stays the anchor; MCPs handle execution and delivery. Add as many or as few as you need.
 
 ```
 /scan AAPL        → 6-pillar fundamentals + Volume Profile + VWAP + trade plan
@@ -277,7 +289,25 @@ Wire up order execution so Claude can place, size, and cancel orders directly fr
 
 After adding it, `/scan AAPL` ends with a trade table — then you ask Claude: *"Place the Swing-B entry as a limit order, 50% size."* Claude calls the broker MCP, confirms fill, logs it.
 
-Other brokers with community MCPs: Interactive Brokers, Tradovate, Binance (crypto). Search `mcp <broker name>` on GitHub or the MCP registry.
+**Weex / Binance** (crypto perpetuals and spot):
+
+Crypto exchanges expose REST + WebSocket APIs with HMAC-signed requests. Wire them up through any HTTP MCP that handles auth signing, or use a thin community wrapper:
+
+```json
+"weex": {
+  "command": "npx",
+  "args": ["-y", "mcp-server-ccxt"],
+  "env": {
+    "EXCHANGE": "weex",
+    "API_KEY": "your-key",
+    "API_SECRET": "your-secret"
+  }
+}
+```
+
+[CCXT](https://github.com/ccxt/ccxt) covers 100+ exchanges under a unified interface — swap `"weex"` for `"binance"`, `"bybit"`, `"okx"`, or any other supported exchange without changing anything else.
+
+Other brokers with community MCPs: Interactive Brokers, Tradovate. Search `mcp <broker name>` on GitHub or the MCP registry.
 
 ### TradingView charts via Chrome DevTools MCP
 
@@ -363,6 +393,35 @@ Each routine runs independently, saves output to the normal `scanned/` paths, an
 - **Earnings pipeline** — schedule `/scan-earnings TICKER` a month out from print date. The checklist is waiting when you need it.
 
 Routines don't replace judgment — they make sure the data is there when you sit down to make a decision.
+
+### Server-side automation with Hermes
+
+Claude routines require the Claude Code desktop app to be running. If you want the same workflows running 24/7 on a VPS — and delivered to your phone via Telegram, Discord, or Slack — [Hermes](https://github.com/nousresearch/hermes-agent) is the natural complement.
+
+Hermes is an open-source autonomous agent framework (Nous Research) with a built-in cron scheduler, MCP support, and messaging-platform bridges. It runs on a $5 VPS and supports 200+ models.
+
+**Install:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+source ~/.bashrc
+hermes setup          # configure model + messaging platform
+```
+
+**Schedule the same workflows:**
+```bash
+# weekly macro refresh — Monday 8am
+hermes cron add "0 8 * * 1" "claude --print '/scan-macro'"
+
+# daily watchlist rescan — 6am weekdays
+hermes cron add "0 6 * * 1-5" "claude --print '/rescan BTCUSDT'"
+
+# weekly screen — Sunday 7pm
+hermes cron add "0 19 * * 0" "claude --print '/discover'"
+```
+
+Results save to `scanned/` exactly as they would from a manual run. Hermes forwards a summary to your configured Telegram or Discord channel — you wake up to a fresh regime read and any verdict deltas, no laptop required.
+
+**With MCP:** If you wire this workspace's tools into Hermes as an MCP server, Hermes can also trigger scans conversationally — ask it from your phone and get the full scan output back in the chat.
 
 ---
 
